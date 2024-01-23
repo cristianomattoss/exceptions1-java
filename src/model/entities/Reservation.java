@@ -15,13 +15,7 @@ public class Reservation {
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	
 	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) throws DomainException {
-		Date now = new Date();
-		if (checkIn.before(now) || checkOut.before(now)) {
-			throw new DomainException("Reservation dates for update must be future dates");
-		}
-		if (!checkOut.after(checkIn)) {
-			throw new DomainException("Check-out date must be after check-in date");
-		}
+		exceptionsDates(checkIn, checkOut);
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -49,15 +43,19 @@ public class Reservation {
 	}
 	
 	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
+		exceptionsDates(checkIn, checkOut);
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+	}
+	
+	public void exceptionsDates (Date checkIn, Date checkOut) throws DomainException {
 		Date now = new Date();
-		if (checkIn.before(now) || checkOut.before(now)) {
-			throw new DomainException("Reservation dates for update must be future dates");
-		}
 		if (!checkOut.after(checkIn)) {
 			throw new DomainException("Check-out date must be after check-in date");
 		}
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
+		if (checkIn.before(now) || checkOut.before(now)) {
+			throw new DomainException("Reservation dates for update must be future dates");
+		}
 	}
 	
 	@Override
